@@ -51,4 +51,5 @@ test-suite sitemap-hs-test
   import:         config
   hs-source-dirs: test
   type:           exitcode-stdio-1.0
+  build-depends:  sitemap-hs
   main-is:        MyLibTest.hs
