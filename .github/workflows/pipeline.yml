@@ -23,12 +23,20 @@ jobs:
           cabal-version: ${{ matrix.cabal }}
 
       - name: Formatting
+        if: matrix.os != 'windows-latest'
         uses: mrkkrp/ormolu-action@v6
 
       - name: Set up HLint
+        if: matrix.os != 'windows-latest'
         uses: haskell/actions/hlint-setup@v2
         with:
           version: 3.3.6
+      
+      - name: 'Run HLint'
+        if: matrix.os != 'windows-latest'
+        uses: haskell/actions/hlint-run@v2
+        with:
+          path: '["src/", "app/", "test/"]'
 
       - name: Configure
         run: cabal configure --enable-tests --enable-benchmarks --enable-documentation --test-show-details=direct --write-ghc-environment-files=always
