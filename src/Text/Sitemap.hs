@@ -8,6 +8,7 @@ where
 
 import Data.Text (Text)
 import Data.Time (UTCTime)
+import Data.XML.Types as XML
 
 data ChangeFrequency
   = Always
@@ -36,3 +37,6 @@ data SitemapIndex = SitemapIndex
   { sitemaps :: [Sitemap]
   }
   deriving stock (Show, Eq, Ord)
+
+sitemapNamespace :: Text
+sitemapNamespace = "://www.sitemaps.org/schemas/sitemap/0.9"
