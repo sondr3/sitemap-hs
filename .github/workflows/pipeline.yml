@@ -67,10 +67,6 @@ jobs:
   stack:
     name: stack / ghc ${{ matrix.ghc }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        stack: ["2.7"]
-        ghc: ["9.0"]
 
     steps:
       - uses: actions/checkout@v2
@@ -79,10 +75,9 @@ jobs:
         id: setup-haskell-cabal
         uses: haskell/actions/setup@v2
         with:
-          ghc-version: ${{ matrix.ghc }}
-          stack-version: ${{ matrix.stack }}
+          stack-version: latest
           enable-stack: true
-          cabal-version: 3.2
+          stack-no-global: true
 
       - uses: actions/cache@v3
         name: Cache ~/.stack
@@ -91,7 +86,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.ghc }}-stack
 
       - name: Build
-        run: stack build --system-ghc --test --no-run-tests
+        run: stack build --test --no-run-tests
 
       - name: Test
-        run: stack test --system-ghc
+        run: stack test 
