@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+        <loc>
+            http://www.example.com/sitemap1.xml.gz
+        </loc>
+        <lastmod>
+            2004-10-10T00:00:00Z
+        </lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>
+            http://www.example.com/sitemap2.xml.gz
+        </loc>
+        <lastmod>
+            2005-01-01T00:00:00Z
+        </lastmod>
+    </sitemap>
+</sitemapindex>

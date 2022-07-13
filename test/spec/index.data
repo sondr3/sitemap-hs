@@ -1,0 +1,1 @@
+SitemapIndex {sitemaps = [SitemapIndexEntry {sitemapLoc = "http://www.example.com/sitemap1.xml.gz", sitemapLastModified = Just 2004-10-10 00:00:00 UTC},SitemapIndexEntry {sitemapLoc = "http://www.example.com/sitemap2.xml.gz", sitemapLastModified = Just 2005-01-01 00:00:00 UTC}]}
