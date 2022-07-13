@@ -20,7 +20,7 @@ module Text.Sitemap
     -- * Rendering sitemap index
     buildSitemapIndex,
     renderSitemapIndex,
-    renderSitemapWithIndex,
+    renderSitemapIndexWith,
   )
 where
 
@@ -125,8 +125,8 @@ buildSitemapIndex sitemap = case XML.fromXMLDocument (X.Document (X.Prologue [] 
   where
     urlset = X.Element "sitemapindex" [("xmlns", ["http://www.sitemaps.org/schemas/sitemap/0.9"])] $ map sitemapEntryToXML (sitemaps sitemap)
 
-renderSitemapIndex :: Sitemap -> L.Text
-renderSitemapIndex = renderSitemapWith XML.def
+renderSitemapIndex :: SitemapIndex -> L.Text
+renderSitemapIndex = renderSitemapIndexWith XML.def
 
-renderSitemapWithIndex :: XML.RenderSettings -> Sitemap -> L.Text
-renderSitemapWithIndex opts sitemap = XML.renderText opts (buildSitemap sitemap)
+renderSitemapIndexWith :: XML.RenderSettings -> SitemapIndex -> L.Text
+renderSitemapIndexWith opts sitemap = XML.renderText opts (buildSitemapIndex sitemap)
