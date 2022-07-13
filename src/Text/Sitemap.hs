@@ -53,12 +53,12 @@ data SitemapEntry = SitemapEntry
   }
   deriving stock (Show, Eq, Ord)
 
-data Sitemap = Sitemap
+newtype Sitemap = Sitemap
   { urls :: [SitemapEntry]
   }
   deriving stock (Show, Eq, Ord)
 
-data SitemapIndex = SitemapIndex
+newtype SitemapIndex = SitemapIndex
   { sitemaps :: [Sitemap]
   }
   deriving stock (Show, Eq, Ord)
@@ -72,13 +72,16 @@ newSitemap urls = Sitemap {urls}
 newSitemapIndex :: [Sitemap] -> SitemapIndex
 newSitemapIndex sitemaps = SitemapIndex {sitemaps}
 
+textNode :: X.Name -> Text -> X.Element
+textNode name content = X.Element name [] [X.NodeContent $ X.ContentText content]
+
 entryToXML :: SitemapEntry -> X.Node
 entryToXML entry = X.NodeElement $ X.Element "url" [] (map X.NodeElement $ catMaybes [locXML, lastModXML, changeFreqXML, priorityXML])
   where
-    locXML = Just $ X.Element "loc" [] [X.NodeContent $ X.ContentText $ loc entry]
-    lastModXML = maybe Nothing (\x -> Just $ X.Element "lastmod" [] [X.NodeContent $ X.ContentText $ T.pack $ formatShow iso8601Format x]) (lastModified entry)
-    changeFreqXML = maybe Nothing (\x -> Just $ X.Element "changeFreq" [] [X.NodeContent $ X.ContentText $ changeFrequencyToText x]) (changeFreq entry)
-    priorityXML = maybe Nothing (\x -> Just $ X.Element "changeFreq" [] [X.NodeContent $ X.ContentText $ T.pack $ show x]) (priority entry)
+    locXML = Just $ textNode "loc" (loc entry)
+    lastModXML = (\x -> Just $ textNode "lastmod" (T.pack $ formatShow iso8601Format x)) =<< lastModified entry
+    changeFreqXML = (Just . textNode "changefreq" . changeFrequencyToText) =<< changeFreq entry
+    priorityXML = (\x -> Just $ textNode "changeFreq" (T.pack $ show x)) =<< priority entry
 
 buildSitemap :: Sitemap -> XML.Document
 buildSitemap sitemap = case XML.fromXMLDocument (X.Document (X.Prologue [] Nothing []) urlset []) of
@@ -88,7 +91,7 @@ buildSitemap sitemap = case XML.fromXMLDocument (X.Document (X.Prologue [] Nothi
     urlset = X.Element "urlset" [("xmlns", ["http://www.sitemaps.org/schemas/sitemap/0.9"])] $ map entryToXML (urls sitemap)
 
 renderSitemap :: Sitemap -> L.Text
-renderSitemap sitemap = renderSitemapWith XML.def sitemap
+renderSitemap = renderSitemapWith XML.def
 
 renderSitemapWith :: XML.RenderSettings -> Sitemap -> L.Text
 renderSitemapWith opts sitemap = XML.renderText opts (buildSitemap sitemap)
