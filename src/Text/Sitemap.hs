@@ -20,6 +20,15 @@ data ChangeFrequency
   | Never
   deriving stock (Show, Eq, Ord)
 
+changeFrequencyToText :: ChangeFrequency -> Text
+changeFrequencyToText Always = "always"
+changeFrequencyToText Hourly = "hourly"
+changeFrequencyToText Daily = "daily"
+changeFrequencyToText Weekly = "weekly"
+changeFrequencyToText Monthly = "monthly"
+changeFrequencyToText Yearly = "yearly"
+changeFrequencyToText Never = "never"
+
 data SitemapEntry = SitemapEntry
   { loc :: Text,
     lastModified :: Maybe UTCTime,
