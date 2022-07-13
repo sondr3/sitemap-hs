@@ -81,6 +81,8 @@ jobs:
         with:
           ghc-version: ${{ matrix.ghc }}
           stack-version: ${{ matrix.stack }}
+          enable-stack: true
+          cabal-version: 3.2
 
       - uses: actions/cache@v3
         name: Cache ~/.stack
