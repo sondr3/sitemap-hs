@@ -1,8 +1,14 @@
 module Text.Sitemap
-  ( SitemapEntry (..),
+  ( -- * Data structures
+    SitemapEntry (..),
     Sitemap (..),
     SitemapIndex (..),
     ChangeFrequency (..),
+
+    -- * Constructors
+    nullSitemapEntry,
+    newSitemap,
+    newSitemapIndex,
   )
 where
 
@@ -49,3 +55,12 @@ data SitemapIndex = SitemapIndex
 
 sitemapNamespace :: Text
 sitemapNamespace = "://www.sitemaps.org/schemas/sitemap/0.9"
+
+nullSitemapEntry :: Text -> SitemapEntry
+nullSitemapEntry url = SitemapEntry {loc = url, lastModified = Nothing, changeFreq = Nothing, priority = Nothing}
+
+newSitemap :: [SitemapEntry] -> Sitemap
+newSitemap urls = Sitemap {urls}
+
+newSitemapIndex :: [Sitemap] -> SitemapIndex
+newSitemapIndex sitemaps = SitemapIndex {sitemaps}
