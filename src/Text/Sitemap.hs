@@ -2,18 +2,25 @@ module Text.Sitemap
   ( -- * Data structures
     SitemapEntry (..),
     Sitemap (..),
+    SitemapIndexEntry (..),
     SitemapIndex (..),
     ChangeFrequency (..),
 
     -- * Constructors
     nullSitemapEntry,
     newSitemap,
+    newSitemapIndexEntry,
     newSitemapIndex,
 
-    -- * Rendering
+    -- * Rendering sitemaps
     buildSitemap,
     renderSitemap,
     renderSitemapWith,
+
+    -- * Rendering sitemap index
+    buildSitemapIndex,
+    renderSitemapIndex,
+    renderSitemapWithIndex,
   )
 where
 
@@ -58,8 +65,14 @@ newtype Sitemap = Sitemap
   }
   deriving stock (Show, Eq, Ord)
 
+data SitemapIndexEntry = SitemapIndexEntry
+  { sitemapLoc :: Text,
+    sitemapLastModified :: Maybe UTCTime
+  }
+  deriving stock (Show, Eq, Ord)
+
 newtype SitemapIndex = SitemapIndex
-  { sitemaps :: [Sitemap]
+  { sitemaps :: [SitemapIndexEntry]
   }
   deriving stock (Show, Eq, Ord)
 
@@ -69,7 +82,10 @@ nullSitemapEntry url = SitemapEntry {loc = url, lastModified = Nothing, changeFr
 newSitemap :: [SitemapEntry] -> Sitemap
 newSitemap urls = Sitemap {urls}
 
-newSitemapIndex :: [Sitemap] -> SitemapIndex
+newSitemapIndexEntry :: Text -> SitemapIndexEntry
+newSitemapIndexEntry loc = SitemapIndexEntry {sitemapLoc = loc, sitemapLastModified = Nothing}
+
+newSitemapIndex :: [SitemapIndexEntry] -> SitemapIndex
 newSitemapIndex sitemaps = SitemapIndex {sitemaps}
 
 textNode :: X.Name -> Text -> X.Element
@@ -95,3 +111,22 @@ renderSitemap = renderSitemapWith XML.def
 
 renderSitemapWith :: XML.RenderSettings -> Sitemap -> L.Text
 renderSitemapWith opts sitemap = XML.renderText opts (buildSitemap sitemap)
+
+sitemapEntryToXML :: SitemapIndexEntry -> X.Node
+sitemapEntryToXML entry = X.NodeElement $ X.Element "sitemap" [] (map X.NodeElement $ catMaybes [locXML, lastModXML])
+  where
+    locXML = Just $ textNode "loc" (sitemapLoc entry)
+    lastModXML = (\x -> Just $ textNode "lastmod" (T.pack $ formatShow iso8601Format x)) =<< sitemapLastModified entry
+
+buildSitemapIndex :: SitemapIndex -> XML.Document
+buildSitemapIndex sitemap = case XML.fromXMLDocument (X.Document (X.Prologue [] Nothing []) urlset []) of
+  Right doc -> doc
+  Left _ -> error "malformed document"
+  where
+    urlset = X.Element "sitemapindex" [("xmlns", ["http://www.sitemaps.org/schemas/sitemap/0.9"])] $ map sitemapEntryToXML (sitemaps sitemap)
+
+renderSitemapIndex :: Sitemap -> L.Text
+renderSitemapIndex = renderSitemapWith XML.def
+
+renderSitemapWithIndex :: XML.RenderSettings -> Sitemap -> L.Text
+renderSitemapWithIndex opts sitemap = XML.renderText opts (buildSitemap sitemap)
