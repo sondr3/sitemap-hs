@@ -41,7 +41,7 @@ data ChangeFrequency
   | Monthly
   | Yearly
   | Never
-  deriving stock (Show, Eq, Ord)
+  deriving stock (Show, Eq, Ord, Read)
 
 changeFrequencyToText :: ChangeFrequency -> Text
 changeFrequencyToText Always = "always"
@@ -58,23 +58,23 @@ data SitemapEntry = SitemapEntry
     changeFreq :: Maybe ChangeFrequency,
     priority :: Maybe Double
   }
-  deriving stock (Show, Eq, Ord)
+  deriving stock (Show, Eq, Ord, Read)
 
 newtype Sitemap = Sitemap
   { urls :: [SitemapEntry]
   }
-  deriving stock (Show, Eq, Ord)
+  deriving stock (Show, Eq, Ord, Read)
 
 data SitemapIndexEntry = SitemapIndexEntry
   { sitemapLoc :: Text,
     sitemapLastModified :: Maybe UTCTime
   }
-  deriving stock (Show, Eq, Ord)
+  deriving stock (Show, Eq, Ord, Read)
 
 newtype SitemapIndex = SitemapIndex
   { sitemaps :: [SitemapIndexEntry]
   }
-  deriving stock (Show, Eq, Ord)
+  deriving stock (Show, Eq, Ord, Read)
 
 nullSitemapEntry :: Text -> SitemapEntry
 nullSitemapEntry url = SitemapEntry {loc = url, lastModified = Nothing, changeFreq = Nothing, priority = Nothing}
