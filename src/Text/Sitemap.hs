@@ -29,7 +29,7 @@ import Data.Set (Set)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as L
-import Data.Time (UTCTime)
+import Data.Time (UTCTime, ZonedTime (zonedTimeToLocalTime))
 import Data.Time.Format.ISO8601 (ISO8601 (iso8601Format), formatShow)
 import qualified Data.XML.Types as X
 import qualified Text.XML as XML
@@ -53,9 +53,24 @@ changeFrequencyToText Monthly = "monthly"
 changeFrequencyToText Yearly = "yearly"
 changeFrequencyToText Never = "never"
 
+data ModifiedTime
+  = ModifiedUTC UTCTime
+  | ModifiedZoned ZonedTime
+  deriving stock (Show, Read)
+
+instance Eq ModifiedTime where
+  (ModifiedUTC a) == (ModifiedUTC b) = a == b
+  (ModifiedZoned a) == (ModifiedZoned b) = zonedTimeToLocalTime a == zonedTimeToLocalTime b
+  _ == _ = False
+
+instance Ord ModifiedTime where
+  (ModifiedUTC a) `compare` (ModifiedUTC b) = a `compare` b
+  (ModifiedZoned a) `compare` (ModifiedZoned b) = zonedTimeToLocalTime a `compare` zonedTimeToLocalTime b
+  _ `compare` _ = EQ
+
 data SitemapEntry = SitemapEntry
   { loc :: Text,
-    lastModified :: Maybe UTCTime,
+    lastModified :: Maybe ModifiedTime,
     changeFreq :: Maybe ChangeFrequency,
     priority :: Maybe Double
   }
@@ -68,7 +83,7 @@ newtype Sitemap = Sitemap
 
 data SitemapIndexEntry = SitemapIndexEntry
   { sitemapLoc :: Text,
-    sitemapLastModified :: Maybe UTCTime
+    sitemapLastModified :: Maybe ModifiedTime
   }
   deriving stock (Show, Eq, Ord, Read)
 
@@ -95,8 +110,9 @@ textNode name content = X.Element name [] [X.NodeContent $ X.ContentText content
 locXML :: Text -> Maybe X.Element
 locXML l = Just $ textNode "loc" l
 
-lastModXML :: UTCTime -> Maybe X.Element
-lastModXML time = Just $ textNode "lastmod" (T.pack $ formatShow iso8601Format time)
+lastModXML :: ModifiedTime -> Maybe X.Element
+lastModXML (ModifiedUTC time) = Just $ textNode "lastmod" (T.pack $ formatShow iso8601Format time)
+lastModXML (ModifiedZoned time) = Just $ textNode "lastmod" (T.pack $ formatShow iso8601Format time)
 
 changeFreqXML :: ChangeFrequency -> Maybe X.Element
 changeFreqXML = Just . textNode "changefreq" . changeFrequencyToText
