@@ -104,7 +104,14 @@ buildSitemap sitemap = case XML.fromXMLDocument (X.Document (X.Prologue [] Nothi
   Right doc -> doc
   Left _ -> error "malformed document"
   where
-    urlset = X.Element "urlset" [("xmlns", ["http://www.sitemaps.org/schemas/sitemap/0.9"])] $ map entryToXML (urls sitemap)
+    urlset =
+      X.Element
+        "urlset"
+        [ ("xmlns", ["http://www.sitemaps.org/schemas/sitemap/0.9"]),
+          ("xmlns:xsi", ["http://www.w3.org/2001/XMLSchema-instance"]),
+          ("xsi:schemaLocation", ["http://www.sitemaps.org/schemas/sitemap/0.9 ", "http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"])
+        ]
+        $ map entryToXML (urls sitemap)
 
 renderSitemap :: Sitemap -> L.Text
 renderSitemap = renderSitemapWith XML.def
@@ -123,7 +130,14 @@ buildSitemapIndex sitemap = case XML.fromXMLDocument (X.Document (X.Prologue [] 
   Right doc -> doc
   Left _ -> error "malformed document"
   where
-    urlset = X.Element "sitemapindex" [("xmlns", ["http://www.sitemaps.org/schemas/sitemap/0.9"])] $ map sitemapEntryToXML (sitemaps sitemap)
+    urlset =
+      X.Element
+        "sitemapindex"
+        [ ("xmlns", ["http://www.sitemaps.org/schemas/sitemap/0.9"]),
+          ("xmlns:xsi", ["http://www.w3.org/2001/XMLSchema-instance"]),
+          ("xsi:schemaLocation", ["http://www.sitemaps.org/schemas/sitemap/0.9 ", "http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd"])
+        ]
+        $ map sitemapEntryToXML (sitemaps sitemap)
 
 renderSitemapIndex :: SitemapIndex -> L.Text
 renderSitemapIndex = renderSitemapIndexWith XML.def
