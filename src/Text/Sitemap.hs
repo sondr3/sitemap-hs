@@ -25,6 +25,7 @@ module Text.Sitemap
 where
 
 import Data.Maybe (catMaybes)
+import Data.Set (Set)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as L
@@ -91,27 +92,51 @@ newSitemapIndex sitemaps = SitemapIndex {sitemaps}
 textNode :: X.Name -> Text -> X.Element
 textNode name content = X.Element name [] [X.NodeContent $ X.ContentText content]
 
+locXML :: Text -> Maybe X.Element
+locXML l = Just $ textNode "loc" l
+
+lastModXML :: UTCTime -> Maybe X.Element
+lastModXML time = Just $ textNode "lastmod" (T.pack $ formatShow iso8601Format time)
+
+changeFreqXML :: ChangeFrequency -> Maybe X.Element
+changeFreqXML = Just . textNode "changefreq" . changeFrequencyToText
+
+priorityXML :: Double -> Maybe X.Element
+priorityXML prio = Just $ textNode "changeFreq" (T.pack $ show prio)
+
 entryToXML :: SitemapEntry -> X.Node
-entryToXML entry = X.NodeElement $ X.Element "url" [] (map X.NodeElement $ catMaybes [locXML, lastModXML, changeFreqXML, priorityXML])
+entryToXML entry =
+  X.NodeElement $
+    X.Element
+      "url"
+      []
+      ( map X.NodeElement $
+          catMaybes
+            [ locXML (loc entry),
+              lastModXML =<< lastModified entry,
+              changeFreqXML =<< changeFreq entry,
+              priorityXML =<< priority entry
+            ]
+      )
+
+document :: X.Element -> Either (Set Text) XML.Document
+document body = XML.fromXMLDocument $ X.Document (X.Prologue [] Nothing []) body []
+
+rootXML :: XML.Name -> Text -> [X.Node] -> X.Element
+rootXML name kind =
+  X.Element
+    name
+    [ ("xmlns", ["http://www.sitemaps.org/schemas/sitemap/0.9"]),
+      ("xmlns:xsi", ["http://www.w3.org/2001/XMLSchema-instance"]),
+      ("xsi:schemaLocation", ["http://www.sitemaps.org/schemas/sitemap/0.9 ", schema])
+    ]
   where
-    locXML = Just $ textNode "loc" (loc entry)
-    lastModXML = (\x -> Just $ textNode "lastmod" (T.pack $ formatShow iso8601Format x)) =<< lastModified entry
-    changeFreqXML = (Just . textNode "changefreq" . changeFrequencyToText) =<< changeFreq entry
-    priorityXML = (\x -> Just $ textNode "changeFreq" (T.pack $ show x)) =<< priority entry
+    schema = X.ContentText $ "http://www.sitemaps.org/schemas/sitemap/0.9/" <> kind <> ".xsd"
 
 buildSitemap :: Sitemap -> XML.Document
-buildSitemap sitemap = case XML.fromXMLDocument (X.Document (X.Prologue [] Nothing []) urlset []) of
+buildSitemap sitemap = case document (rootXML "urlset" "sitemap" (map entryToXML $ urls sitemap)) of
   Right doc -> doc
   Left _ -> error "malformed document"
-  where
-    urlset =
-      X.Element
-        "urlset"
-        [ ("xmlns", ["http://www.sitemaps.org/schemas/sitemap/0.9"]),
-          ("xmlns:xsi", ["http://www.w3.org/2001/XMLSchema-instance"]),
-          ("xsi:schemaLocation", ["http://www.sitemaps.org/schemas/sitemap/0.9 ", "http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"])
-        ]
-        $ map entryToXML (urls sitemap)
 
 renderSitemap :: Sitemap -> L.Text
 renderSitemap = renderSitemapWith XML.def
@@ -120,24 +145,12 @@ renderSitemapWith :: XML.RenderSettings -> Sitemap -> L.Text
 renderSitemapWith opts sitemap = XML.renderText opts (buildSitemap sitemap)
 
 sitemapEntryToXML :: SitemapIndexEntry -> X.Node
-sitemapEntryToXML entry = X.NodeElement $ X.Element "sitemap" [] (map X.NodeElement $ catMaybes [locXML, lastModXML])
-  where
-    locXML = Just $ textNode "loc" (sitemapLoc entry)
-    lastModXML = (\x -> Just $ textNode "lastmod" (T.pack $ formatShow iso8601Format x)) =<< sitemapLastModified entry
+sitemapEntryToXML entry = X.NodeElement $ X.Element "sitemap" [] (map X.NodeElement $ catMaybes [locXML $ sitemapLoc entry, lastModXML =<< sitemapLastModified entry])
 
 buildSitemapIndex :: SitemapIndex -> XML.Document
-buildSitemapIndex sitemap = case XML.fromXMLDocument (X.Document (X.Prologue [] Nothing []) urlset []) of
+buildSitemapIndex sitemap = case document (rootXML "sitemapindex" "siteindex" (map sitemapEntryToXML $ sitemaps sitemap)) of
   Right doc -> doc
   Left _ -> error "malformed document"
-  where
-    urlset =
-      X.Element
-        "sitemapindex"
-        [ ("xmlns", ["http://www.sitemaps.org/schemas/sitemap/0.9"]),
-          ("xmlns:xsi", ["http://www.w3.org/2001/XMLSchema-instance"]),
-          ("xsi:schemaLocation", ["http://www.sitemaps.org/schemas/sitemap/0.9 ", "http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd"])
-        ]
-        $ map sitemapEntryToXML (sitemaps sitemap)
 
 renderSitemapIndex :: SitemapIndex -> L.Text
 renderSitemapIndex = renderSitemapIndexWith XML.def

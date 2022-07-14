@@ -41,6 +41,7 @@ library
   exposed-modules: Text.Sitemap
   hs-source-dirs:  src
   build-depends:
+    , containers
     , text         >=1    && <3
     , time         ^>=1.12
     , xml-conduit  ^>=1.9
