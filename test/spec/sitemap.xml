@@ -13,9 +13,9 @@
         <changefreq>
             monthly
         </changefreq>
-        <changeFreq>
+        <priority>
             0.8
-        </changeFreq>
+        </priority>
     </url>
     <url>
         <loc>
@@ -41,11 +41,11 @@
             http://www.example.com/catalog?item=74&amp;desc=vacation_newfoundland
         </loc>
         <lastmod>
-            2004-12-23T15:00:00Z
+            2004-12-23T18:00:00+15:00
         </lastmod>
-        <changeFreq>
+        <priority>
             0.3
-        </changeFreq>
+        </priority>
     </url>
     <url>
         <loc>
