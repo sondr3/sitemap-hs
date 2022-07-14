@@ -21,9 +21,9 @@ renderingTests = do
       [ goldenVsString
           "default sitemap"
           "test/spec/sitemap.xml"
-          (TLE.encodeUtf8 <$> renderSitemapWith (XML.def {rsPretty = True}) <$> (read <$> readFile "./test/spec/sitemap.data")),
+          (TLE.encodeUtf8 . renderSitemapWith (XML.def {rsPretty = True}) <$> (read <$> readFile "./test/spec/sitemap.data")),
         goldenVsString
           "default sitemap index"
           "test/spec/index.xml"
-          (TLE.encodeUtf8 <$> renderSitemapIndexWith (XML.def {rsPretty = True}) <$> (read <$> readFile "./test/spec/index.data"))
+          (TLE.encodeUtf8 . renderSitemapIndexWith (XML.def {rsPretty = True}) <$> (read <$> readFile "./test/spec/index.data"))
       ]
