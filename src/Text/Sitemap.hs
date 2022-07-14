@@ -32,7 +32,7 @@ import Data.Set (Set)
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as L
-import Data.Time (UTCTime, ZonedTime (zonedTimeToLocalTime))
+import Data.Time (UTCTime, ZonedTime)
 import Data.Time.Format.ISO8601 (ISO8601 (iso8601Format), formatShow)
 import qualified Data.XML.Types as X
 import Text.XML (ParseSettings (psRetainNamespaces))
@@ -46,7 +46,7 @@ data ChangeFrequency
   | Monthly
   | Yearly
   | Never
-  deriving stock (Show, Eq, Ord, Read)
+  deriving stock (Show, Read)
 
 changeFrequencyToText :: ChangeFrequency -> Text
 changeFrequencyToText Always = "always"
@@ -62,39 +62,29 @@ data ModifiedTime
   | ModifiedZoned ZonedTime
   deriving stock (Show, Read)
 
-instance Eq ModifiedTime where
-  (ModifiedUTC a) == (ModifiedUTC b) = a == b
-  (ModifiedZoned a) == (ModifiedZoned b) = zonedTimeToLocalTime a == zonedTimeToLocalTime b
-  _ == _ = False
-
-instance Ord ModifiedTime where
-  (ModifiedUTC a) `compare` (ModifiedUTC b) = a `compare` b
-  (ModifiedZoned a) `compare` (ModifiedZoned b) = zonedTimeToLocalTime a `compare` zonedTimeToLocalTime b
-  _ `compare` _ = EQ
-
 data SitemapEntry = SitemapEntry
   { loc :: Text,
     lastModified :: Maybe ModifiedTime,
     changeFreq :: Maybe ChangeFrequency,
     priority :: Maybe Double
   }
-  deriving stock (Show, Eq, Ord, Read)
+  deriving stock (Show, Read)
 
 newtype Sitemap = Sitemap
   { urls :: [SitemapEntry]
   }
-  deriving stock (Show, Eq, Ord, Read)
+  deriving stock (Show, Read)
 
 data SitemapIndexEntry = SitemapIndexEntry
   { sitemapLoc :: Text,
     sitemapLastModified :: Maybe ModifiedTime
   }
-  deriving stock (Show, Eq, Ord, Read)
+  deriving stock (Show, Read)
 
 newtype SitemapIndex = SitemapIndex
   { sitemaps :: [SitemapIndexEntry]
   }
-  deriving stock (Show, Eq, Ord, Read)
+  deriving stock (Show, Read)
 
 nullSitemapEntry :: Text -> SitemapEntry
 nullSitemapEntry url = SitemapEntry {loc = url, lastModified = Nothing, changeFreq = Nothing, priority = Nothing}
