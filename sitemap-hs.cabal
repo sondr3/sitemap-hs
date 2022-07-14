@@ -4,7 +4,8 @@ version:            0.1.0.0
 author:             Sondre Aasemoen
 maintainer:         sondre@eons.io
 synopsis:           A sitemap parser and generator
-description:        A sitemap parser and generator
+description:        A sitemap parser, generator and validator for websites.
+category:           Web
 homepage:           https://github.com/sondr3/sitemap-hs
 license-file:       LICENSE LICENSE_APACHE
 license:            (MIT OR Apache-2.0)
@@ -65,3 +66,13 @@ test-suite sitemap-hs-test
     , tasty-golden  ^>=2.3
     , text          >=1   && <3
     , xml-conduit   ^>=1.9
+
+test-suite sitemap-hs-readme
+  import:         config
+  hs-source-dirs: test
+  main-is:        Readme.hs
+  type:           exitcode-stdio-1.0
+  ghc-options:    -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+    , sitemap-hs
+    , text        >=1 && <3
