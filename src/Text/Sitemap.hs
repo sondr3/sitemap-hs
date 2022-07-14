@@ -21,6 +21,9 @@ module Text.Sitemap
     buildSitemapIndex,
     renderSitemapIndex,
     renderSitemapIndexWith,
+
+    -- * Parsing
+    parseSitemap,
   )
 where
 
@@ -32,6 +35,7 @@ import qualified Data.Text.Lazy as L
 import Data.Time (UTCTime, ZonedTime (zonedTimeToLocalTime))
 import Data.Time.Format.ISO8601 (ISO8601 (iso8601Format), formatShow)
 import qualified Data.XML.Types as X
+import Text.XML (ParseSettings (psRetainNamespaces))
 import qualified Text.XML as XML
 
 data ChangeFrequency
@@ -159,6 +163,16 @@ renderSitemap = renderSitemapWith XML.def
 
 renderSitemapWith :: XML.RenderSettings -> Sitemap -> L.Text
 renderSitemapWith opts sitemap = XML.renderText opts (buildSitemap sitemap)
+
+parseDocument :: L.Text -> Maybe X.Document
+parseDocument doc = case XML.parseText (XML.def {psRetainNamespaces = True}) doc of
+  Right d -> Just $ XML.toXMLDocument d
+  Left _ -> Nothing
+
+parseSitemap :: L.Text -> Maybe Sitemap
+parseSitemap doc = case parseDocument doc of
+  Just d -> Just undefined
+  Nothing -> Nothing
 
 sitemapEntryToXML :: SitemapIndexEntry -> X.Node
 sitemapEntryToXML entry = X.NodeElement $ X.Element "sitemap" [] (map X.NodeElement $ catMaybes [locXML $ sitemapLoc entry, lastModXML =<< sitemapLastModified entry])
