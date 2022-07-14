@@ -5,6 +5,7 @@ module Text.Sitemap
     SitemapIndexEntry (..),
     SitemapIndex (..),
     ChangeFrequency (..),
+    ModifiedTime (..),
 
     -- * Constructors
     nullSitemapEntry,
@@ -24,6 +25,9 @@ module Text.Sitemap
 
     -- * Parsing
     parseSitemap,
+
+    -- * Utilities
+    prettyXML,
   )
 where
 
@@ -35,7 +39,7 @@ import qualified Data.Text.Lazy as L
 import Data.Time (UTCTime, ZonedTime)
 import Data.Time.Format.ISO8601 (ISO8601 (iso8601Format), formatShow)
 import qualified Data.XML.Types as X
-import Text.XML (ParseSettings (psRetainNamespaces))
+import Text.XML (ParseSettings (psRetainNamespaces), RenderSettings (rsPretty))
 import qualified Text.XML as XML
 
 data ChangeFrequency
@@ -147,6 +151,9 @@ buildSitemap :: Sitemap -> XML.Document
 buildSitemap sitemap = case document (rootXML "urlset" "sitemap" (map entryToXML $ urls sitemap)) of
   Right doc -> doc
   Left _ -> error "malformed document"
+
+prettyXML :: XML.RenderSettings
+prettyXML = XML.def {rsPretty = True}
 
 renderSitemap :: Sitemap -> L.Text
 renderSitemap = renderSitemapWith XML.def
