@@ -118,7 +118,7 @@ changeFreqXML :: ChangeFrequency -> Maybe X.Element
 changeFreqXML = Just . textNode "changefreq" . changeFrequencyToText
 
 priorityXML :: Double -> Maybe X.Element
-priorityXML prio = Just $ textNode "changeFreq" (T.pack $ show prio)
+priorityXML prio = Just $ textNode "priority" (T.pack $ show prio)
 
 entryToXML :: SitemapEntry -> X.Node
 entryToXML entry =
