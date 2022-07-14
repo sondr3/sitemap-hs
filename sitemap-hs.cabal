@@ -59,7 +59,6 @@ test-suite sitemap-hs-test
   type:           exitcode-stdio-1.0
   ghc-options:    -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-    , filepath      ^>=1.4
     , sitemap-hs
     , tasty         ^>=1.4
     , tasty-golden  ^>=2.3
