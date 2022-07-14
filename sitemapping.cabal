@@ -1,13 +1,13 @@
 cabal-version:      2.4
-name:               sitemap-hs
+name:               sitemapping
 version:            0.1.0.0
 author:             Sondre Aasemoen
 maintainer:         sondre@eons.io
 synopsis:           A sitemap parser and generator
 description:        A sitemap parser, generator and validator for websites.
 category:           Web
-homepage:           https://github.com/sondr3/sitemap-hs
-bug-reports:        https://github.com/sondr3/sitemap-hs/issues
+homepage:           https://github.com/sondr3/sitemapping
+bug-reports:        https://github.com/sondr3/sitemapping/issues
 license-file:       LICENSE LICENSE_APACHE
 license:            (MIT OR Apache-2.0)
 build-type:         Simple 
@@ -18,7 +18,7 @@ extra-source-files:
 
 source-repository head
   type:     git
-  location: https://github.com/sondr3/sitemap-hs.git
+  location: https://github.com/sondr3/sitemapping.git
 
 common config
   default-language:   Haskell2010
@@ -49,31 +49,31 @@ library
     , xml-conduit  ^>=1.9
     , xml-types    ^>=0.3
 
-executable sitemap-hs
+executable sitemapping
   import:         config
   main-is:        Main.hs
-  build-depends:  sitemap-hs
+  build-depends:  sitemapping
   hs-source-dirs: app
 
-test-suite sitemap-hs-test
+test-suite sitemapping-test
   import:         config
   hs-source-dirs: test
   main-is:        Main.hs
   type:           exitcode-stdio-1.0
   ghc-options:    -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-    , sitemap-hs
+    , sitemapping
     , tasty         ^>=1.4
     , tasty-golden  ^>=2.3
     , text          >=1   && <3
     , xml-conduit   ^>=1.9
 
-test-suite sitemap-hs-readme
+test-suite sitemapping-readme
   import:         config
   hs-source-dirs: test
   main-is:        Readme.hs
   type:           exitcode-stdio-1.0
   ghc-options:    -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-    , sitemap-hs
-    , text        >=1 && <3
+    , sitemapping
+    , text         >=1 && <3

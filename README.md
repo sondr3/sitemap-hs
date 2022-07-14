@@ -1,6 +1,7 @@
-<h1 align="center">sitemap-hs</h1>
+<h1 align="center">sitemapping</h1>
 <p align="center">
-    <a href="https://github.com/sondr3/sitemap-hs/actions"><img alt="GitHub Actions Status" src="https://github.com/sondr3/sitemap-hs/workflows/pipeline/badge.svg" /></a>
+    <a href="https://github.com/sondr3/sitemapping/actions"><img alt="GitHub Actions Status" src="https://github.com/sondr3/sitemapping/workflows/pipeline/badge.svg" /></a>
+    <a href="http://hackage.haskell.org/package/sitemapping"><img alt="Hackage" src="https://img.shields.io/hackage/v/sitemapping.svg" /></a>
 </p>
 
 <p align="center">
@@ -23,10 +24,10 @@
 Install via Hackage by adding it to your `.cabal`-file: 
 
 ```cabal
-sitemap-hs ^>=0.1
+sitemapping ^>=0.1
 ```
 
-Or install the CLI used to parse/validate sitemaps with `cabal install sitemap-hs`.
+Or install the CLI used to parse/validate sitemaps with `cabal install sitemapping`.
 
 # Getting started
 

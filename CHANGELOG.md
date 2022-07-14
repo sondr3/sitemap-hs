@@ -1,4 +1,4 @@
-# Revision history for sitemap-hs
+# Revision history for sitemapping
 
 ## 0.1.0.0 -- YYYY-mm-dd
 

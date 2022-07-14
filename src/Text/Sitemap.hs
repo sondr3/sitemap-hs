@@ -18,7 +18,7 @@
 -- by adding it to @build-depends@ in your @.cabal@ file.
 --
 -- @
--- build-depends: sitemap-hs ^>= 0.1.0
+-- build-depends: sitemapping ^>= 0.1.0
 -- @
 --
 -- This module does not use common names and can be directly imported:
