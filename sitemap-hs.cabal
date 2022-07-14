@@ -7,6 +7,7 @@ synopsis:           A sitemap parser and generator
 description:        A sitemap parser, generator and validator for websites.
 category:           Web
 homepage:           https://github.com/sondr3/sitemap-hs
+bug-reports:        https://github.com/sondr3/sitemap-hs/issues
 license-file:       LICENSE LICENSE_APACHE
 license:            (MIT OR Apache-2.0)
 build-type:         Simple 
