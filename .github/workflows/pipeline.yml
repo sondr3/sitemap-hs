@@ -23,7 +23,7 @@ jobs:
 
       - name: Formatting
         if: matrix.os != 'windows-latest'
-        uses: mrkkrp/ormolu-action@v6
+        uses: mrkkrp/ormolu-action@v7
 
       - name: Set up HLint
         if: matrix.os != 'windows-latest'
