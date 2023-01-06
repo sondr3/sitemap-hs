@@ -28,8 +28,6 @@ jobs:
       - name: Set up HLint
         if: matrix.os != 'windows-latest'
         uses: haskell/actions/hlint-setup@v2
-        with:
-          version: 3.3.6
       
       - name: 'Run HLint'
         if: matrix.os != 'windows-latest'
