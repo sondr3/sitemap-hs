@@ -61,6 +61,11 @@ jobs:
       - name: Test
         run: cabal test all 
 
+      - name: Doctests
+        run: |
+          cabal install doctest --overwrite-policy=always
+          cabal repl --with-ghc=doctest
+
   stack:
     name: stack / ghc ${{ matrix.ghc }}
     runs-on: ubuntu-latest
