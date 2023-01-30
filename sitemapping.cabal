@@ -1,4 +1,4 @@
-cabal-version:      2.4
+cabal-version:      3.4
 name:               sitemapping
 version:            0.1.0.0
 author:             Sondre Aasemoen
@@ -84,6 +84,12 @@ test-suite doctests
   main-is:        doctests.hs
   type:           exitcode-stdio-1.0
   ghc-options:    -threaded
+
+  if impl(ghc >= 9.2)
+    buildable: True 
+  else
+    buildable: False 
+
   build-depends:
     , doctest-parallel  ^>=0.3
     , sitemapping

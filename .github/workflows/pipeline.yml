@@ -56,11 +56,7 @@ jobs:
         run: cabal build all 
 
       - name: Test
-        run: cabal test sitemapping-test sitemapping-readme 
-
-      - name: Doctests
-        if: matrix.ghc != '9.0'
-        run: cabal test doctests
+        run: cabal test all
 
   stack:
     name: stack / ghc ${{ matrix.ghc }}
