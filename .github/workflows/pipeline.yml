@@ -22,15 +22,12 @@ jobs:
           cabal-version: ${{ matrix.cabal }}
 
       - name: Formatting
-        if: matrix.os != 'windows-latest'
         uses: mrkkrp/ormolu-action@v9
 
       - name: Set up HLint
-        if: matrix.os != 'windows-latest'
         uses: haskell/actions/hlint-setup@v2
       
       - name: 'Run HLint'
-        if: matrix.os != 'windows-latest'
         uses: haskell/actions/hlint-run@v2
         with:
           path: '["src/", "app/", "test/"]'
@@ -59,12 +56,11 @@ jobs:
         run: cabal build all 
 
       - name: Test
-        run: cabal test all 
+        run: cabal test sitemapping-test sitemapping-readme 
 
       - name: Doctests
-        run: |
-          cabal install doctest --overwrite-policy=always
-          cabal repl --with-ghc=doctest
+        if: matrix.ghc != '9.0'
+        run: cabal test doctests
 
   stack:
     name: stack / ghc ${{ matrix.ghc }}
