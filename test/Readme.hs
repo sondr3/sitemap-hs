@@ -1,4 +1,4 @@
-import qualified Data.Text.Lazy as L
+import Data.Text.Lazy qualified as L
 import Text.Sitemap (ChangeFrequency (..), SitemapEntry (..), newSitemap, nullSitemapEntry, renderSitemap)
 
 main :: IO ()

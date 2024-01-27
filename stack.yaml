@@ -1,3 +1,3 @@
-resolver: lts-20.9
+resolver: lts-22.7
 extra-deps:
-  - doctest-parallel-0.3.0@sha256:ab6200d9d17eda8a08b96657f46c00f1e7f1685cca3d1aa72d00617681c9be2b,5870
+  - tasty-1.5@sha256:2dc91101339814be9913846ca8c424d1c3eccfefb27c6335f3fea2af40a3d2e4,2870

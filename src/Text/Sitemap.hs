@@ -67,13 +67,13 @@ where
 import Data.Maybe (catMaybes)
 import Data.Set (Set)
 import Data.Text (Text)
-import qualified Data.Text as T
-import qualified Data.Text.Lazy as L
+import Data.Text qualified as T
+import Data.Text.Lazy qualified as L
 import Data.Time (UTCTime, ZonedTime)
 import Data.Time.Format.ISO8601 (ISO8601 (iso8601Format), formatShow)
-import qualified Data.XML.Types as X
+import Data.XML.Types qualified as X
 import Text.XML (ParseSettings (psRetainNamespaces), RenderSettings (rsPretty))
-import qualified Text.XML as XML
+import Text.XML qualified as XML
 
 -- | How frequently the page is likely to change.
 data ChangeFrequency

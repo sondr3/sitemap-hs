@@ -3,12 +3,12 @@ module Main
   )
 where
 
-import qualified Data.Text.Lazy.Encoding as TLE
+import Data.Text.Lazy.Encoding qualified as TLE
 import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.Golden (goldenVsString)
 import Text.Sitemap (renderSitemapIndexWith, renderSitemapWith)
 import Text.XML (RenderSettings (..))
-import qualified Text.XML as XML
+import Text.XML qualified as XML
 
 main :: IO ()
 main = defaultMain =<< renderingTests
