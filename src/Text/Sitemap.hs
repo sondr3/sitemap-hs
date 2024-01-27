@@ -56,8 +56,8 @@ module Text.Sitemap
     renderSitemapIndexWith,
 
     -- * Parsing
-
-    -- parseSitemap,
+    parseSitemap,
+    parseDocument,
 
     -- * Utilities
     prettyXML,
