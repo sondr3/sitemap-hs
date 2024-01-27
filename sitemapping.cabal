@@ -33,6 +33,7 @@ common config
   ghc-options:
     -Weverything
     -Wno-unsafe
+    -Wno-implicit-prelude
     -Wno-missing-safe-haskell-mode
     -Wno-missing-kind-signatures
     -Wno-missing-import-lists

@@ -1,2 +1,0 @@
-packages: ./sitemapping.cabal
-write-ghc-environment-files: always
