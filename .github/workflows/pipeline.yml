@@ -22,7 +22,7 @@ jobs:
           cabal-version: "3.10"
 
       - name: Formatting
-        uses: mrkkrp/ormolu-action@v15
+        uses: mrkkrp/ormolu-action@v16
 
       - name: Set up HLint
         uses: haskell/actions/hlint-setup@v2
